@@ -609,10 +609,9 @@ class MainWindow(QMainWindow):
         self.gait_step = 0
 
     def on_gait_play(self):
-        # Adjust timer interval based on gait speed
         sp = self.simulation_tab.gait_sliders['GaitSpeed'].value()
         if sp == 0:
-            return  # Avoid division by zero
+            return  #
         interval = max(10, int(1000 / sp))  # Minimum interval of 10ms
         self.gait_timer.start(interval)
 
