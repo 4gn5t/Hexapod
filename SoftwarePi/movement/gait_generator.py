@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import List, Dict
 import numpy as np
 from time import sleep
+from config.robot_config import RobotConfig
 
 @dataclass
 class LegPosition:
