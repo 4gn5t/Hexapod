@@ -1,6 +1,7 @@
 from time import sleep
 import RPi.GPIO as GPIO
 from adafruit_servokit import ServoKit
+from config.robot_config import RobotConfig
 
 class ServoController:
     def __init__(self):
