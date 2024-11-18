@@ -9,14 +9,13 @@ ax = fig.add_subplot(111, projection='3d')
 
 hexapod = Hexapod([3,2,3])
 
-# draw body
 head = ax.scatter(hexapod.body.head.x,
                   hexapod.body.head.y, 
                   hexapod.body.head.z,
                   facecolors='red', edgecolors='tomato', s=hexapod.body.f*80, zorder=1)
 v = list([[v.x, v.y, v.z] for v in hexapod.body.vertices])
 body = ax.add_collection3d(Poly3DCollection([v], facecolor='w', edgecolor='k', linewidth=8, zorder=0))
-# draw legs
+
 legs = {}
 for k, leg in hexapod.legs.items():
     px = [leg.points_global[i].x for i in range(4)]
@@ -43,23 +42,16 @@ hexapod.generate_walking_sequence(dict(
 
 def update(frame):
     global tip_points
-    # IK
     hexapod.solve_ik([rot_x[frame%len(t)], rot_y[frame%len(t)], 0], [0, 0, 0])
-    # Gait
-    # hexapod.set_pose_from_walking_sequence(frame%len(hexapod.walking_sequence[0]['coxia']))
-    # update body
     v = list([[v.x, v.y, v.z] for v in hexapod.body.vertices])
     body.set_verts([v])
-    # update head
     head._offsets3d = ([hexapod.body.head.x], [hexapod.body.head.y], [hexapod.body.head.z])
-    # update legs
     for k, leg in hexapod.legs.items():
         px = [leg.points_global[i].x for i in range(4)]
         py = [leg.points_global[i].y for i in range(4)]
         pz = [leg.points_global[i].z for i in range(4)]
         legs[k].set_data(px, py)
         legs[k].set_3d_properties(pz)
-    # update tip curve
     tip_p = hexapod.legs[tip_leg].get_ground_contact_point()
     if frame == 0:
         tip_points = [[tip_p.x], [tip_p.y], [tip_p.z]]
@@ -77,6 +69,5 @@ def update(frame):
         
 ax.set_aspect('equal')
 
-# ani = FuncAnimation(fig, update, frames=4*len(hexapod.walking_sequence[0]['coxia']), interval=20, blit=False)
 ani = FuncAnimation(fig, update, frames=4*len(t), interval=20, blit=False)
 plt.show()
